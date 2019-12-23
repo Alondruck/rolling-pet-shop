@@ -1,7 +1,5 @@
 {
-  "execMap": {
-    "js": "babel-node"
-  },
+  "exec": "npm run server",
   "watch": ["src/*", "public/*"],
   "ext": "js, html, css, json"
 }
