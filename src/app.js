@@ -5,7 +5,7 @@ import logger from 'morgan';
 
 import { isAuth } from './middlewares/auth';
 import { singUp, singIn } from './controllers/user';
-import mongoose from 'mongoose';
+
 
 import indexRouter from './routes/index';
 import usuariosRouter from './routes/usuarios';
@@ -13,7 +13,7 @@ import usuariosRouter from './routes/usuarios';
 //import privateRouter from './routes/private';
 
 const app = express();
-mongoose.connect(process.env.MONGODB || 'mongodb://localhost:27017/petShop');
+
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
