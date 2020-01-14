@@ -3,10 +3,6 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
-import { isAuth } from './middlewares/auth';
-import { singUp, singIn } from './controllers/user';
-
-
 import indexRouter from './routes/index';
 import usuariosRouter from './routes/usuarios';
 
@@ -32,10 +28,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
 app.use('/usuarios', usuariosRouter);
-app.post('/singup', singUp);
-app.post('/singin', singIn);
-app.get('/private', isAuth ,(req,res)=>{
-    res.status(200).send({message: "Tienes acceso"});
-});
+
 
 export default app;

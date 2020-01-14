@@ -1,21 +1,30 @@
 import Usuario from '../models/usuario';
-import {createToken} from '../services/service';
+import { createToken } from '../services/service';
 
-function singUp(req,res){
-    const user = new Usuario({
-        username: req.body.username,
-        password: req.body.password
-    })
-    user.save((err) => {
-        if(err) res.status(500).send(err);
-        return res.status(200).send({token: createToken(user)})
-    })
+function signUp(req, res) {
+
+    Usuario.findOne({username: req.body.username}, (err,data)=>{
+        if (err) return res.status(500).send({ message: err });
+        if (data) return res.send("Ya existe ese nombre de usuario");
+        const user = new Usuario({
+            username: req.body.username,
+            password: req.body.password
+        })
+        user.save((err) => { //Se guarda a traves de models/mongoose
+            if (err) return res.status(500).send(err);
+            return res.status(200).send({
+                message: "El usuario ha sido creado correctamente",
+                token: createToken(user)
+            })
+        })
+
+    });
 }
 
-function singIn(req,res){
-    Usuario.find({username: req.body.username, password: req.body.password}, (err,user) =>{
-        if(err) return res.status(500).send({message: err});
-        if(!user) return res.status(404).send({mesagge:"No existe el usuario"});
+function signIn(req, res) {
+    Usuario.find({ username: req.body.username, password: req.body.password }, (err, user) => {
+        if (err) return res.status(500).send({ message: err });
+        if (!user) return res.status(404).send({ mesagge: "Usuario o contraseña incorrecta"});
         req.user = user;
         res.status(200).send({
             message: "Te has logueado correctamente",
@@ -24,4 +33,4 @@ function singIn(req,res){
     })
 }
 
-export {singUp, singIn};
+export { signUp, signIn };
