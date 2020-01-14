@@ -11,8 +11,6 @@ mongoose.connect('mongodb://localhost:27017/petShop');
 router.post('/signup', signUp);
 router.post('/signin', signIn);
 router.post('/signup/profile', isAuth, (req, res) => {
-  console.log("id: ", req.userId);
-  console.log("body: ", req.body);
   const profile = new Profile({
     userId: req.userId,
     name: req.body.name,
