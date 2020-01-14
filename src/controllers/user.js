@@ -22,10 +22,11 @@ function signUp(req, res) {
 }
 
 function signIn(req, res) {
-    Usuario.find({ username: req.body.username, password: req.body.password }, (err, user) => {
+    Usuario.findOne({ username: req.body.username, password: req.body.password }, (err, user) => {
         if (err) return res.status(500).send({ message: err });
         if (!user) return res.status(404).send({ mesagge: "Usuario o contraseña incorrecta"});
-        req.user = user;
+        // if(user === "admin") req.admin = user;
+        // else req.user = user;
         res.status(200).send({
             message: "Te has logueado correctamente",
             token: createToken(user)

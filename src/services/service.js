@@ -4,8 +4,11 @@ import moment from 'moment';
 
 function createToken(user){
 
+    let isAdmin = false;
+    if(user.username === "admin") isAdmin = true;
     const payload = {
         sub: user._id,
+        isAdmin: isAdmin,
         iat: moment().unix(),
         exp: moment().add(14, 'days').unix()
     }
@@ -22,7 +25,10 @@ function decodeToken(token){
                     message: "El token ha expirado"
                 })
             }
-            resolve(payload.sub);
+            resolve({
+                id: payload.sub,
+                isAdmin: payload.isAdmin
+            });
 
         } catch(err){
             reject({

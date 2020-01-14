@@ -4,12 +4,17 @@ import mongoose from 'mongoose';
 import Usuario from '../models/usuario';
 import Profile from '../models/profile';
 import { signUp, signIn } from '../controllers/user';
-import { isAuth } from '../middlewares/auth';
+import { isAuth, isAdmin } from '../middlewares/auth';
 
 mongoose.connect('mongodb://localhost:27017/petShop');
 
 router.post('/signup', signUp);
 router.post('/signin', signIn);
+router.get('/admin/usuarios', isAuth, isAdmin, (req,res)=>{
+  Usuario.find({}, (err,data)=>{
+    return res.send({data: data});
+  })
+})
 router.post('/signup/profile', isAuth, (req, res) => {
   const profile = new Profile({
     userId: req.userId,
@@ -27,11 +32,12 @@ router.post('/signup/profile', isAuth, (req, res) => {
   })
 });
 
-router.get('/signin', isAuth, (req, res) => {
-  console.log("id: ",req.userId);
 
-  return res.send({id: req.userId});
-});
+// router.get('/signin', isAuth, (req, res) => {
+//   console.log("id: ",req.userId);
+
+//   return res.send({id: req.userId});
+// });
 
 // router.get('/', (req, res, next) => {
 //   Usuario.find({}, null, (err, data) => {

@@ -9,7 +9,8 @@ function isAuth(req, res, next) {
 
     decodeToken(token)
         .then(response => {
-            req.userId = response;
+            req.userId = response.id;
+            req.isAdmin = response.isAdmin;
             next();
         })
         .catch(response => {
@@ -17,4 +18,9 @@ function isAuth(req, res, next) {
         })
 }
 
-export { isAuth };
+function isAdmin(req,res,next) {
+    if(req.isAdmin) next();
+    else return res.send("no es admin");
+}
+
+export { isAuth, isAdmin };
