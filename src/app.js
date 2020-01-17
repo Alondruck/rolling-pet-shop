@@ -5,6 +5,7 @@ import logger from 'morgan';
 
 import indexRouter from './routes/index';
 import usuariosRouter from './routes/usuarios';
+import productsRouter from './routes/products';
 
 //import privateRouter from './routes/private';
 
@@ -28,6 +29,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
 app.use('/usuarios', usuariosRouter);
-
+app.use('/products', productsRouter);
 
 export default app;
