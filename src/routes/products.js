@@ -33,7 +33,7 @@ router.get('/', function (req, res, next) {
     }
 });
 
-router.post('/newproduct', isAuth, isAdmin, function (req, res, next) {
+router.post('/new', isAuth, isAdmin, function (req, res, next) {
     const newProduct = new Product({
         name: req.body.name,
         description: req.body.description,
@@ -41,8 +41,29 @@ router.post('/newproduct', isAuth, isAdmin, function (req, res, next) {
         stock: req.body.stock
     });
     newProduct.save((err, newProduct) => {
-        if(err) return res.status(500).send(err);
+        if (err) return res.status(500).send(err);
         res.send(newProduct);
+    });
+});
+
+router.put('/', isAuth, isAdmin, function (req, res, next) {
+    const query = { _id: req.query.id };
+    const update = {
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        stock: req.body.stock
+    }
+    Product.findOneAndUpdate(query, update, { new: true }, (err, productUpdated) => {
+        if (err) return res.status(500).send(err);
+        res.send(productUpdated);
+    });
+});
+
+router.delete('/', isAuth, isAdmin, function (req, res, next) {
+    const query = { _id: req.query.id };
+    Product.deleteOne(query, (err) => {
+        if (err) return res.status(500).send(err);
     });
 });
 
