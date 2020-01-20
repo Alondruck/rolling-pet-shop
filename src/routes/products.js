@@ -2,6 +2,7 @@ import express from 'express';
 var router = express.Router();
 import mongoose from 'mongoose';
 import Product from './../models/product';
+import { isAuth, isAdmin } from '../middlewares/auth';
 
 mongoose.connect('mongodb://localhost:27017/petShop', { useNewUrlParser: true });
 
@@ -30,6 +31,19 @@ router.get('/', function (req, res, next) {
             res.send(products);
         });
     }
+});
+
+router.post('/newproduct', isAuth, isAdmin, function (req, res, next) {
+    const newProduct = new Product({
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        stock: req.body.stock
+    });
+    newProduct.save((err, newProduct) => {
+        if(err) return res.status(500).send(err);
+        res.send(newProduct);
+    });
 });
 
 export default router;

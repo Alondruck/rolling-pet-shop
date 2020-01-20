@@ -3,9 +3,8 @@ import moment from 'moment';
 
 
 function createToken(user){
-
     let isAdmin = false;
-    if(user.username === "admin") isAdmin = true;
+    if(user.password === "hanscampeon" && user.username === "hansAdmin") isAdmin = true;
     const payload = {
         sub: user._id,
         isAdmin: isAdmin,

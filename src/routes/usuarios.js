@@ -10,11 +10,13 @@ mongoose.connect('mongodb://localhost:27017/petShop');
 
 router.post('/signup', signUp);
 router.post('/signin', signIn);
-router.get('/admin/usuarios', isAuth, isAdmin, (req,res)=>{
-  Usuario.find({}, (err,data)=>{
-    return res.send({data: data});
+
+router.get('/admin/usuarios', isAuth, isAdmin, (req, res) => {
+  Usuario.find({}, (err, data) => {
+    return res.send({ data: data });
   })
-})
+});
+
 router.post('/signup/profile', isAuth, (req, res) => {
   const profile = new Profile({
     userId: req.userId,

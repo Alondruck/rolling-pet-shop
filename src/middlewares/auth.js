@@ -18,8 +18,8 @@ function isAuth(req, res, next) {
         })
 }
 
-function isAdmin(req,res,next) {
-    if(req.isAdmin) next();
+function isAdmin(req, res, next) {
+    if (req.isAdmin) next();
     else return res.send("no es admin");
 }
 
