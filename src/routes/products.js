@@ -26,10 +26,10 @@ router.get('/', function (req, res, next) {
             });
         });
     } else {
-        Product.find({}, null, { skip: 0, limit: 10 }, (err, products) => {
+        Product.find({}, { name: 'asc' }, { skip: 0, limit: 10 }, (err, products) => {
             if (err) return res.status(500).send(err);
             res.send(products);
-        });
+        }).sort({ name: 'asc' });
     }
 });
 
