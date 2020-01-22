@@ -7,6 +7,7 @@ import { isAuth, isAdmin } from '../middlewares/auth';
 mongoose.connect('mongodb://localhost:27017/petShop', { useNewUrlParser: true });
 
 router.get('/', function (req, res, next) {
+    let response;
     if (req.query.page && req.query.quantity) {
         let page = parseInt(req.query.page, 10);
         let quantity = parseInt(req.query.quantity, 10);
@@ -15,7 +16,7 @@ router.get('/', function (req, res, next) {
             Product.estimatedDocumentCount((err, count) => {
                 if (err) return res.status(500).send(err);
                 let totalPages = Math.ceil(count / quantity);
-                let response = {
+                response = {
                     result: products,
                     currentPage: page,
                     totalPages: totalPages,
@@ -26,8 +27,15 @@ router.get('/', function (req, res, next) {
             });
         });
     } else {
-        Product.find({}, { name: 'asc' }, { skip: 0, limit: 10 }, (err, products) => {
+        Product.find({}, null, { skip: 0, limit: 10 }, (err, products) => {
             if (err) return res.status(500).send(err);
+            response = {
+                result: products,
+                currentPage: 1,
+                totalPages: 1,
+                total: 10,
+                quantity: 10
+            }
             res.send(products);
         }).sort({ name: 'asc' });
     }
