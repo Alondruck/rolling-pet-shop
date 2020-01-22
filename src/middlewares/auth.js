@@ -11,6 +11,10 @@ function isAuth(req, res, next) {
         .then(response => {
             req.userId = response.id;
             req.isAdmin = response.isAdmin;
+            console.log({
+                userId: req.userId,
+                isAdmin: req.isAdmin
+            })
             next();
         })
         .catch(response => {
