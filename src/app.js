@@ -4,9 +4,10 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import indexRouter from './routes/index';
-import usuariosRouter from './routes/usuarios';
+import usersRouter from './routes/users';
+import profilesRouter from './routes/profiles';
+import { signUp, signIn } from './controllers/controllers';
 
-//import privateRouter from './routes/private';
 
 const app = express();
 
@@ -27,7 +28,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', indexRouter);
-app.use('/usuarios', usuariosRouter);
+app.use('/users', usersRouter);
+app.use('/profiles', profilesRouter);
+app.post('/signup', signUp);
+app.post('/signin', signIn);
 
 
 export default app;

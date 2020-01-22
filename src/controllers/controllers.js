@@ -1,12 +1,12 @@
-import Usuario from '../models/usuario';
+import User from '../models/user';
 import { createToken } from '../services/service';
 
 function signUp(req, res) {
 
-    Usuario.findOne({username: req.body.username}, (err,data)=>{
+    User.findOne({username: req.body.username}, (err,data)=>{
         if (err) return res.status(500).send({ message: err });
-        if (data) return res.send("Ya existe ese nombre de usuario");
-        const user = new Usuario({
+        if (data) return res.send({message: "Ya existe ese nombre de usuario"});
+        const user = new User({
             username: req.body.username,
             password: req.body.password
         })
@@ -22,11 +22,9 @@ function signUp(req, res) {
 }
 
 function signIn(req, res) {
-    Usuario.findOne({ username: req.body.username, password: req.body.password }, (err, user) => {
+    User.findOne({ username: req.body.username, password: req.body.password }, (err, user) => {
         if (err) return res.status(500).send({ message: err });
         if (!user) return res.status(404).send({ mesagge: "Usuario o contraseña incorrecta"});
-        // if(user === "admin") req.admin = user;
-        // else req.user = user;
         res.status(200).send({
             message: "Te has logueado correctamente",
             token: createToken(user)
