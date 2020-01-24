@@ -1,17 +1,24 @@
 import express from 'express';
 var router = express.Router();
 import mongoose from 'mongoose';
-import User from '../models/user';
+import Profile from '../models/profile';
 import { isAuth, isAdmin } from '../middlewares/auth';
+import User from './../models/user';
 
 mongoose.connect('mongodb://localhost:27017/petShop');
 
-router.get('/admin', isAuth, isAdmin, (req, res) => {
+/*router.get('/admin', isAuth, isAdmin, (req, res) => {
   User.find({}, (err, data) => {
+    if(err) return res.status(500).send({ message: err });
     return res.send({ data: data });
   })
-})
+});*/
 
+router.get('/admin', (req, res) => {
+  User.find({}, (err, users) => {
+    res.send(users);
+  });
+});
 
 // router.get('/signin', isAuth, (req, res) => {
 //   console.log("id: ",req.userId);
