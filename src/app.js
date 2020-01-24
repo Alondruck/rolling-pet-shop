@@ -8,6 +8,7 @@ import productsRouter from './routes/products';
 import usersRouter from './routes/users';
 import profilesRouter from './routes/profiles';
 import contactRouter from './routes/contact';
+import salesRouter from './routes/sales';
 import { signUp, signIn } from './controllers/controllers';
 
 
@@ -33,9 +34,12 @@ app.use('/', indexRouter);
 app.use('/products', productsRouter);
 app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
+app.use('/contact', contactRouter);
+app.use('/sales', salesRouter);
 app.post('/signup', signUp);
 app.post('/signin', signIn);
-app.use('/contact', contactRouter);
+
+
 
 
 export default app;

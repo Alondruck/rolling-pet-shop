@@ -2,10 +2,10 @@ import jwt from 'jwt-simple';
 import moment from 'moment';
 
 
-function createToken(user){
+function createToken(user) {
     let isAdmin = false;
     console.log("services/user._id: ", user._id);
-    if(user._id == "5e21f5f177ab00277cb7023d") {isAdmin = true}
+    if (user._id == "5e21f5f177ab00277cb7023d") { isAdmin = true }
     console.log("isAdmin: ", isAdmin);
     const payload = {
         sub: user._id,
@@ -16,11 +16,11 @@ function createToken(user){
     return jwt.encode(payload, 'miclavedetoken');
 }
 
-function decodeToken(token){
-    const decode = new Promise((resolve,reject) => {
+function decodeToken(token) {
+    const decode = new Promise((resolve, reject) => {
         try {
             const payload = jwt.decode(token, 'miclavedetoken');
-            if(payload.exp <= moment().unix()){
+            if (payload.exp <= moment().unix()) {
                 reject({
                     status: 401,
                     message: "El token ha expirado"
@@ -31,7 +31,7 @@ function decodeToken(token){
                 isAdmin: payload.isAdmin
             });
 
-        } catch(err){
+        } catch (err) {
             reject({
                 status: 500,
                 message: "Invalid Token"
@@ -42,4 +42,4 @@ function decodeToken(token){
     return decode;
 }
 
-export {createToken, decodeToken};
+export { createToken, decodeToken };
