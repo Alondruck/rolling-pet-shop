@@ -1,5 +1,6 @@
 import jwt from 'jwt-simple';
 import moment from 'moment';
+import config from '../../config';
 
 
 function createToken(user){
@@ -13,13 +14,13 @@ function createToken(user){
         iat: moment().unix(),
         exp: moment().add(14, 'days').unix()
     }
-    return jwt.encode(payload, 'miclavedetoken');
+    return jwt.encode(payload, config.SECRET_TOKEN);
 }
 
 function decodeToken(token){
     const decode = new Promise((resolve,reject) => {
         try {
-            const payload = jwt.decode(token, 'miclavedetoken');
+            const payload = jwt.decode(token, config.SECRET_TOKEN);
             if(payload.exp <= moment().unix()){
                 reject({
                     status: 401,

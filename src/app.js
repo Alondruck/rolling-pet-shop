@@ -7,6 +7,7 @@ import indexRouter from './routes/index';
 import productsRouter from './routes/products';
 import usersRouter from './routes/users';
 import profilesRouter from './routes/profiles';
+import appointmentsRouter from './routes/appointments';
 import { signUp, signIn } from './controllers/controllers';
 
 
@@ -32,6 +33,7 @@ app.use('/', indexRouter);
 app.use('/products', productsRouter);
 app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
+app.use('/appointments', appointmentsRouter);
 app.post('/signup', signUp);
 app.post('/signin', signIn);
 
