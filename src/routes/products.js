@@ -3,8 +3,9 @@ var router = express.Router();
 import mongoose from 'mongoose';
 import Product from './../models/product';
 import { isAuth, isAdmin } from '../middlewares/auth';
+import config from '../../config';
 
-mongoose.connect('mongodb://localhost:27017/petShop', { useNewUrlParser: true });
+mongoose.connect(config.mongo_uri);
 
 router.get('/', function (req, res, next) {
     if (req.query.page && req.query.quantity) {
@@ -33,7 +34,7 @@ router.get('/', function (req, res, next) {
     }
 });
 
-router.post('/new', isAuth, isAdmin, function (req, res, next) {
+router.post('/new', function (req, res, next) { //is auth, is admin
     const newProduct = new Product({
         name: req.body.name,
         description: req.body.description,
