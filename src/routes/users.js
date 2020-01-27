@@ -3,9 +3,6 @@ var router = express.Router();
 import mongoose from 'mongoose';
 import User from '../models/user';
 import { isAuth, isAdmin } from '../middlewares/auth';
-import config from '../../config';
-
-mongoose.connect(config.mongo_uri);
 
 router.get('/admin', isAuth, isAdmin, (req, res) => {
   User.findOne({}, (err, data) => {

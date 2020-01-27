@@ -9,6 +9,9 @@ import usersRouter from './routes/users';
 import profilesRouter from './routes/profiles';
 //  import appointmentsRouter from './routes/appointments';
 import { signUp, signIn } from './controllers/controllers';
+import config from './../config';
+
+mongoose.connect(config.mongo_uri);
 
 
 const app = express();
@@ -35,6 +38,7 @@ app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
 //app.use('/appointments', appointmentsRouter);
 app.post('/signup', signUp);
+app.post('crearAdmin', signUpAdmin);
 app.post('/signin', signIn);
 
 

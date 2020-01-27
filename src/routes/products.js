@@ -3,9 +3,6 @@ var router = express.Router();
 import mongoose from 'mongoose';
 import Product from './../models/product';
 import { isAuth, isAdmin } from '../middlewares/auth';
-import config from '../../config';
-
-mongoose.connect(config.mongo_uri);
 
 router.get('/', function (req, res, next) {
     if (req.query.page && req.query.quantity) {
@@ -41,9 +38,9 @@ router.post('/new', function (req, res, next) { //is auth, is admin
         price: req.body.price,
         stock: req.body.stock
     });
-    newProduct.save((err, newProduct) => {
+    newProduct.save((err, data) => {
         if (err) return res.status(500).send(err);
-        res.send(newProduct);
+        res.send(data);
     });
 });
 

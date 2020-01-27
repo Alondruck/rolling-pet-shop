@@ -20,6 +20,20 @@ function signUp(req, res) {
     });
 }
 
+function signUpAdmin (req,res) {
+    const user = new User({
+        username: 'admin',
+        password: '1234'
+    })
+    user.save((err, data) => { //Se guarda a traves de models/mongoose
+        if (err) return res.status(500).send(err);
+        return res.status(200).send({
+            message: "El usuario ha sido creado correctamente",
+            id: data._id
+        })
+    })
+}
+
 function signIn(req, res) {
     User.findOne({ username: req.body.username, password: req.body.password }, (err, user) => {
         if (err) return res.status(500).send({ message: err });
