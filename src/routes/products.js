@@ -41,7 +41,7 @@ router.get('/', function (req, res, next) {
     }
 });
 
-router.post('/new', isAuth, isAdmin, function (req, res, next) {
+router.post('/', isAuth, isAdmin, function (req, res, next) {
     const newProduct = new Product({
         name: req.body.name,
         description: req.body.description,

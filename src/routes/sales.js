@@ -4,28 +4,35 @@ import Sale from './../models/sale';
 import Product from './../models/product';
 
 router.post('/', function (req, res, next) {
-    const products = req.body.products;
-    products.forEach((item, index) => {
+    const productsReq = req.body.products;
+    productsReq.forEach((item, index) => {
         Product.findOne({ _id: item.productId }, (err, product) => {
             if (err) return res.status(500).send(err);
-            let update = { stock: parseInt(product.stock, 10) - parseInt(item.quantity, 10) }
-            Product.findOneAndUpdate({ _id: product._id }, update, { new: true }, (err, productUpdated) => {
-                if (err) return res.status(500).send(err);
-                console.log("producto actualizado " + index + ": " + productUpdated);
-            });
+            let productStock = parseInt(product.stock, 10);
+            let quantity = parseInt(item.quantity, 10);
+            if (productStock >= quantity) {
+                let update = { stock: productStock - quantity }
+                Product.findOneAndUpdate({ _id: product._id }, update, { new: true }, (err, productUpdated) => {
+                    if (err) return res.status(500).send(err);
+                    if (index == req.body.products.length - 1) {
+                        const newSale = new Sale({
+                            products: req.body.products
+                        });
+                        console.log("nueva venta: " + newSale);
+                        newSale.save((err, newSale) => {
+                            if (err) return res.status(500).send(err);
+                            res.send(newSale);
+                        });
+                    }
+                });
+            } else {
+                return res.status(404).send({
+                    message: "No hay stock suficiente"
+                });
+            }
         })
     });
-    res.send(req.body.products);
-    /*const newSale = new Sale({
-        products: [{
-            productId: "testId1234",
-            quantity: 4
-        }, {
-            productId: "testId1235",
-            quantity: 2
-        }
-        ]
-    });*/
+
     /*{
         "products": [
             {

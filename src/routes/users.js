@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost:27017/petShop');
   })
 });*/
 
-router.get('/admin', (req, res) => {
+router.get('/admin', isAuth, isAdmin, (req, res) => {
   User.find({}, (err, users) => {
     res.send(users);
   });
