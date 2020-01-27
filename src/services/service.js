@@ -6,7 +6,7 @@ import config from '../../config';
 function createToken(user){
     let isAdmin = false;
     console.log("services/user._id: ", user._id);
-    if(user._id == "5e21f5f177ab00277cb7023d") {isAdmin = true}
+    if(user._id == "5e2f27a47ec2c90017572459") {isAdmin = true}
     console.log("isAdmin: ", isAdmin);
     const payload = {
         sub: user._id,
