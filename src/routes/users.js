@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import User from '../models/user';
 import { isAuth, isAdmin } from '../middlewares/auth';
 
-router.get('/admin', isAuth, isAdmin, (req, res) => {
+router.get('/admin', (req, res) => { //isAuth, isAdmin,
   User.findOne({}, (err, data) => {
     return res.send({ data: data });
   })
