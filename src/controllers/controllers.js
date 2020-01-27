@@ -31,4 +31,4 @@ function signIn(req, res) {
     })
 }
 
-export { signUp, signIn, signUpAdmin };
+export { signUp, signIn };
