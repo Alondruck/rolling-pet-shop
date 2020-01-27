@@ -38,7 +38,7 @@ app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
 //app.use('/appointments', appointmentsRouter);
 app.post('/signup', signUp);
-app.post('crearAdmin', signUpAdmin);
+app.post('/crearAdmin', signUpAdmin);
 app.post('/signin', signIn);
 
 
