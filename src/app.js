@@ -8,7 +8,7 @@ import productsRouter from './routes/products';
 import usersRouter from './routes/users';
 import profilesRouter from './routes/profiles';
 //  import appointmentsRouter from './routes/appointments';
-import { signUp, signIn } from './controllers/controllers';
+import { signUp, signIn, signUpAdmin } from './controllers/controllers';
 import config from './../config';
 
 mongoose.connect(config.mongo_uri);

@@ -45,4 +45,4 @@ function signIn(req, res) {
     })
 }
 
-export { signUp, signIn };
+export { signUp, signIn, signUpAdmin };
