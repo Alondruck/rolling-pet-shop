@@ -14,11 +14,20 @@ mongoose.connect('mongodb://localhost:27017/petShop');
   })
 });*/
 
-router.get('/admin', isAuth, isAdmin, (req, res) => {
+router.get('/admin/users', isAuth, isAdmin, (req, res) => {
   User.find({}, (err, users) => {
+    if (err) return res.status(500).send(err);
     res.send(users);
   });
 });
+
+router.get('/admin/profiles', isAuth, isAdmin, (req, res) => {
+  Profile.find({}, (err, profiles) => {
+    if (err) return res.status(500).send(err);
+    res.send(profiles);
+  });
+});
+
 
 // router.get('/signin', isAuth, (req, res) => {
 //   console.log("id: ",req.userId);

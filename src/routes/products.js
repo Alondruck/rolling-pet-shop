@@ -33,10 +33,10 @@ router.get('/', function (req, res, next) {
                 result: products,
                 currentPage: 1,
                 totalPages: 1,
-                total: 10,
+                total: products.length,
                 quantity: 10
             }
-            res.send(products);
+            res.send(response);
         }).sort({ name: 'asc' });
     }
 });
@@ -56,12 +56,7 @@ router.post('/', isAuth, isAdmin, function (req, res, next) {
 
 router.put('/', isAuth, isAdmin, function (req, res, next) {
     const query = { _id: req.query.id };
-    const update = {
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        stock: req.body.stock
-    }
+    const update = req.body;
     Product.findOneAndUpdate(query, update, { new: true }, (err, productUpdated) => {
         if (err) return res.status(500).send(err);
         res.send(productUpdated);
@@ -70,8 +65,9 @@ router.put('/', isAuth, isAdmin, function (req, res, next) {
 
 router.delete('/', isAuth, isAdmin, function (req, res, next) {
     const query = { _id: req.query.id };
-    Product.deleteOne(query, (err) => {
+    Product.deleteOne(query, (err, deleted) => {
         if (err) return res.status(500).send(err);
+        res.send(deleted);
     });
 });
 
