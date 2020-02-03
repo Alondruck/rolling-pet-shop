@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import Profile from '../models/profile';
 import { isAuth, isAdmin } from '../middlewares/auth';
 import User from './../models/user';
+import Appointment from './../models/turn';
+import { addListener } from 'nodemon';
 
 // mongoose.connect(config.mongo_uri);
 
@@ -38,6 +40,14 @@ router.put('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el use
     res.send(userUpdate);
   })
 })
+
+router.get('/admin/turns', isAuth, isAdmin, (req, res) => {
+  Appointment.find({}, (err, list) => {
+    if(err) res.status(500).send(err);
+    res.send(list);
+  });
+});
+
 
 router.delete('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el username y lo borra
   const username = { username: req.body.username };
