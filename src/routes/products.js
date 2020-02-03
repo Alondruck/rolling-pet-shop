@@ -5,6 +5,7 @@ import Product from './../models/product';
 import { isAuth, isAdmin } from '../middlewares/auth';
 
 router.get('/', function (req, res, next) {
+    let response;
     if (req.query.page && req.query.quantity) {
         let page = parseInt(req.query.page, 10);
         let quantity = parseInt(req.query.quantity, 10);
@@ -13,7 +14,7 @@ router.get('/', function (req, res, next) {
             Product.estimatedDocumentCount((err, count) => {
                 if (err) return res.status(500).send(err);
                 let totalPages = Math.ceil(count / quantity);
-                let response = {
+                response = {
                     result: products,
                     currentPage: page,
                     totalPages: totalPages,
@@ -24,14 +25,21 @@ router.get('/', function (req, res, next) {
             });
         });
     } else {
-        Product.find({}, { name: 'asc' }, { skip: 0, limit: 10 }, (err, products) => {
+        Product.find({}, null, { skip: 0, limit: 10 }, (err, products) => {
             if (err) return res.status(500).send(err);
-            res.send(products);
+            response = {
+                result: products,
+                currentPage: 1,
+                totalPages: 1,
+                total: products.length,
+                quantity: 10
+            }
+            res.send(response);
         }).sort({ name: 'asc' });
     }
 });
 
-router.post('/new', function (req, res, next) { //is auth, is admin
+router.post('/', isAuth, isAdmin, function (req, res, next) {
     const newProduct = new Product({
         name: req.body.name,
         description: req.body.description,
@@ -46,12 +54,7 @@ router.post('/new', function (req, res, next) { //is auth, is admin
 
 router.put('/', isAuth, isAdmin, function (req, res, next) {
     const query = { _id: req.query.id };
-    const update = {
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        stock: req.body.stock
-    }
+    const update = req.body;
     Product.findOneAndUpdate(query, update, { new: true }, (err, productUpdated) => {
         if (err) return res.status(500).send(err);
         res.send(productUpdated);
@@ -60,8 +63,9 @@ router.put('/', isAuth, isAdmin, function (req, res, next) {
 
 router.delete('/', isAuth, isAdmin, function (req, res, next) {
     const query = { _id: req.query.id };
-    Product.deleteOne(query, (err) => {
+    Product.deleteOne(query, (err, deleted) => {
         if (err) return res.status(500).send(err);
+        res.send(deleted);
     });
 });
 

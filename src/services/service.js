@@ -3,7 +3,7 @@ import moment from 'moment';
 import config from '../../config';
 
 
-function createToken(user){
+function createToken(user) {
     let isAdmin = false;
     console.log("services/user._id: ", user._id);
     if(user._id == "5e2f27a47ec2c90017572459") {isAdmin = true}
@@ -17,8 +17,8 @@ function createToken(user){
     return jwt.encode(payload, config.SECRET_TOKEN);
 }
 
-function decodeToken(token){
-    const decode = new Promise((resolve,reject) => {
+function decodeToken(token) {
+    const decode = new Promise((resolve, reject) => {
         try {
             const payload = jwt.decode(token, config.SECRET_TOKEN);
             if(payload.exp <= moment().unix()){
@@ -32,7 +32,7 @@ function decodeToken(token){
                 isAdmin: payload.isAdmin
             });
 
-        } catch(err){
+        } catch (err) {
             reject({
                 status: 500,
                 message: "Invalid Token"
@@ -43,4 +43,4 @@ function decodeToken(token){
     return decode;
 }
 
-export {createToken, decodeToken};
+export { createToken, decodeToken };

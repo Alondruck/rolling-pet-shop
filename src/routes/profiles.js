@@ -14,17 +14,18 @@ router.post('/signup', isAuth, (req, res) => {
     email: req.body.email,
     address: req.body.address,
     celphone: req.body.celphone
-  })
-  profile.save((err) => {
+  });
+  profile.save((err, newProfile) => {
     if (err) return res.status(500).send(err);
     return res.status(200).send({
       message: "El perfil del usuario ha sido creado correctamente",
+      profile: newProfile
     })
   })
 });
 
 router.get('/', isAuth, (req, res) => {
-  Profile.findOne({userId: req.userId}, (err, user) => {
+  Profile.findOne({ userId: req.userId }, (err, user) => {
     if (err) return res.status(500).send({ message: err });
     if (!user) return res.status(404).send({ mesagge: "No existe el usuario" });
     res.send(user);

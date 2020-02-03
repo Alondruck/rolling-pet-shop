@@ -7,7 +7,8 @@ import indexRouter from './routes/index';
 import productsRouter from './routes/products';
 import usersRouter from './routes/users';
 import profilesRouter from './routes/profiles';
-//  import appointmentsRouter from './routes/appointments';
+import contactRouter from './routes/contact';
+import salesRouter from './routes/sales';
 import { signUp, signIn } from './controllers/controllers';
 import mongoose from 'mongoose';
 import config from './../config';
@@ -37,9 +38,12 @@ app.use('/', indexRouter);
 app.use('/products', productsRouter);
 app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
-//app.use('/appointments', appointmentsRouter);
+app.use('/contact', contactRouter);
+app.use('/sales', salesRouter);
 app.post('/signup', signUp);
 app.post('/signin', signIn);
+
+
 
 
 export default app;
