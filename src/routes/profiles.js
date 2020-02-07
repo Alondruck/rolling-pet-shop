@@ -30,14 +30,31 @@ router.get('/', isAuth, (req, res) => {
     if (!user) return res.status(404).send({ mesagge: "No existe el usuario" });
     res.send(user);
   })
-});
+})
 
-router.put('/', isAuth, (req, res) => {
-  const profileUpdate = req.body;
-  Profile.findOneAndUpdate({ userId: req.userId }, profileUpdate, { new: true }, (err, profileUpdated) => {
+router.put('/', isAuth, (req,res) => {
+  const userId = req.userId;
+  const update = {
+    name: req.body.name,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    address: req.body.address,
+    celphone: req.body.celphone
+  }
+
+  Profile.findOneAndUpdate(userId, update, (err,profileUpdate) => {
+    if (err) return res.status(500).send({ message: err });
+    else return res.send(profileUpdate);
+  })
+})
+
+router.delete('/', isAuth, isAdmin, (req,res) => {
+  const username = { username: req.body.username };
+  User.deleteOne(username, (err) => {
     if (err) return res.status(500).send(err);
-    res.send(profileUpdated);
-  });
-});
-
+    else return res.send({
+      message: "El usuario se elimino correctamente"
+    });
+  })
+})
 export default router;

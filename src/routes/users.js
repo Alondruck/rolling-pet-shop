@@ -4,15 +4,16 @@ import mongoose from 'mongoose';
 import Profile from '../models/profile';
 import { isAuth, isAdmin } from '../middlewares/auth';
 import User from './../models/user';
+import Appointment from './../models/turn';
+import { addListener } from 'nodemon';
 
-mongoose.connect('mongodb://localhost:27017/petShop');
+// mongoose.connect(config.mongo_uri);
 
-/*router.get('/admin', isAuth, isAdmin, (req, res) => {
-  User.find({}, (err, data) => {
-    if(err) return res.status(500).send({ message: err });
+router.get('/admin', (req, res) => { //isAuth, isAdmin,
+  User.findOne({}, (err, data) => {
     return res.send({ data: data });
   })
-});*/
+});
 
 router.get('/admin/users', isAuth, isAdmin, (req, res) => {
   User.find({}, (err, users) => {
@@ -28,39 +29,34 @@ router.get('/admin/profiles', isAuth, isAdmin, (req, res) => {
   });
 });
 
+router.put('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el username viejo y el username y password nuevos
+  const username = { username: req.body.username };
+  const update = {
+    username: req.body.usernameUpdate,
+    password: req.body.passwordUpdate
+  }
+  User.findOneAndUpdate(username, update, { new: true }, (err, userUpdate) => {
+    if (err) return res.status(500).send(err);
+    res.send(userUpdate);
+  })
+})
 
-// router.get('/signin', isAuth, (req, res) => {
-//   console.log("id: ",req.userId);
+router.get('/admin/turns', isAuth, isAdmin, (req, res) => {
+  Appointment.find({}, (err, list) => {
+    if(err) res.status(500).send(err);
+    res.send(list);
+  });
+});
 
-//   return res.send({id: req.userId});
-// });
 
-// router.get('/', (req, res, next) => {
-//   Usuario.find({}, null, (err, data) => {
-//     if (err) res.status(500).send(err);
-//     else res.send(data);
-//   })
-// })
-
-// router.post('/', (req, res, next) => {
-//   console.log(req.body);
-
-//   const nuevo = new Usuario({
-//     username: req.body.username,
-//     password: req.body.password
-//   })
-
-//   nuevo.save((err, data) => {
-//     if (err) res.status(500).send(err);
-//     else res.send(data);
-//   })
-// })
-
-// router.delete('/', (req, res, next) => {
-//   Usuario.deleteOne({ _id: req.body.id }, (err, data) => {
-//     if (err) res.status(500).send(err);
-//     else res.send(data);
-//   })
-// })
+router.delete('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el username y lo borra
+  const username = { username: req.body.username };
+  User.deleteOne(username, (err) => {
+    if (err) return res.status(500).send(err);
+    else return res.send({
+      message: "El usuario se elimino correctamente"
+    });
+  })
+})
 
 export default router;

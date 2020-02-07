@@ -17,13 +17,26 @@ import usersRouter from './routes/users';
 import profilesRouter from './routes/profiles';
 import contactRouter from './routes/contact';
 import salesRouter from './routes/sales';
+import turnsRouter from './routes/turns';
 import { signUp, signIn } from './controllers/controllers';
+import mongoose from 'mongoose';
+import config from './../config';
 
+<<<<<<< HEAD
 import router from './routes/turn'
 
+=======
+mongoose.connect(config.mongo_uri);
+
+import mercadopago from 'mercadopago';
+>>>>>>> fc6f733d931d088973207d15d683a82fc479cf0d
 
 const app = express();
 
+// Agrega credenciales
+mercadopago.configure({
+    access_token: 'TEST-607815359835968-020315-75592987f5bb7b97e60df865e77c0cdd-187664559'
+});
 
 // Configurar cabeceras y cors
 app.use((req, res, next) => {
@@ -46,11 +59,11 @@ app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
 app.use('/contact', contactRouter);
 app.use('/sales', salesRouter);
+app.use('/turns', turnsRouter);
 app.post('/signup', signUp);
 app.post('/signin', signIn);
 
 app.use('/', router)
-
 
 
 export default app;

@@ -4,8 +4,6 @@ import mongoose from 'mongoose';
 import Product from './../models/product';
 import { isAuth, isAdmin } from '../middlewares/auth';
 
-mongoose.connect('mongodb://localhost:27017/petShop', { useNewUrlParser: true });
-
 router.get('/', function (req, res, next) {
     let response;
     if (req.query.page && req.query.quantity) {
@@ -48,9 +46,9 @@ router.post('/', isAuth, isAdmin, function (req, res, next) {
         price: req.body.price,
         stock: req.body.stock
     });
-    newProduct.save((err, newProduct) => {
+    newProduct.save((err, data) => {
         if (err) return res.status(500).send(err);
-        res.send(newProduct);
+        res.send(data);
     });
 });
 
