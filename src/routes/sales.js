@@ -42,7 +42,9 @@ router.post('/', function (req, res, next) {
                             .then(function (response) {
                                 // Este valor reemplazará el string "$$init_point$$" en tu HTML
                                 global.init_point = response.body.init_point;
-                                res.send(global.init_point);
+                                res.send({
+                                    url: global.init_point
+                                });
                             }).catch(function (error) {
                                 res.status(500).send(error);
                             });
@@ -114,10 +116,32 @@ router.post('/', function (req, res, next) {
 router.put('/', (req, res, next) => {
     const sale = req.body;
     let update = { status: sale.status };
-    Sale.findByIdAndUpdate({ _id: sale._id }, update, { new: true }, (err, saleUpdated) => {
+    Sale.findOneAndUpdate({ _id: sale._id }, update, { new: true }, (err, saleUpdated) => {
         if (err) return res.status(500).send(err);
-        res.send(saleUpdated);
+        if (sale.status == "approved") {
+            let ids = [];
+            saleUpdated.products.forEach((item) => {
+                ids.push(item.productId);
+            });
+            Product.find({ _id: ids }, (err, products) => {
+                if (err) res.status(500).send(err);
+                products.forEach((item, index) => {
+                    console.log("productoFind: ", item);
+                    console.log("Sale Updated: ", saleUpdated.products[index]);
+                    let updateStock = { stock: parseInt(item.stock, 10) - parseInt(saleUpdated.products[index].quantity, 10) }
+                    Product.findOneAndUpdate({ _id: item._id }, updateStock, { new: true }, (err) => {
+                        if (err) res.status(500).send(err);
+                    });
+                });
+                res.send({
+                    message: "ok"
+                });
+            });
+        } else {
+            res.send(saleUpdated);
+        }
     });
+
 });
 // Crea un objeto de preferencia
 /*let preference = {
