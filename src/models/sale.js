@@ -8,11 +8,16 @@ const productSaleSchema = new mongoose.Schema({
     quantity: {
         type: Number,
         required: true
-    } 
+    }
 });
 
 const saleSchema = new mongoose.Schema({
-    products: [productSaleSchema]
+    products: [productSaleSchema],
+    status: {
+        type: String,
+        default: "pending",
+        required: true
+    }
 });
 
 const Sale = mongoose.model('Sale', saleSchema);
