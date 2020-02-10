@@ -12,6 +12,9 @@ router.post('/', function (req, res, next) {
     });
     Product.find({ _id: ids }, (err, products) => {
         if (err) return res.status(500).send(err);
+        if (req.body.products.length !== products.length) return res.send({
+            message: "no se encontró el producto seleccionado"
+        });
         let flg = false; // se activa cuando quantity supera el stock
         req.body.products.forEach((item, index) => {
             if (parseInt(products[index].stock, 10) >= parseInt(item.quantity, 10)) {
@@ -33,9 +36,9 @@ router.post('/', function (req, res, next) {
                         let preference = {
                             items: itemsMP,
                             back_urls: {
-                                success: "https://www.tu-sitio/success",
-                                failure: "http://www.tu-sitio/failure",
-                                pending: "http://www.tu-sitio/pending"
+                                success: "https://www.xvideos.com",
+                                failure: "http://www.pornhub.com",
+                                pending: "http://www.redtube.com"
                             }
                         };
                         mercadopago.preferences.create(preference)
