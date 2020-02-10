@@ -41,7 +41,7 @@ router.post('/', isAuth, (req, res) => {
     petName: req.body.petName,
     ownerName: req.body.ownerName,
     description: req.body.description,
-    date: Date.now()
+    date: req.body.date
   });
   newDate.save((err, newDate) => {
     if (err) res.status(500).send(err);
