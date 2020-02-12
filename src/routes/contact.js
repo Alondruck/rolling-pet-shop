@@ -24,4 +24,23 @@ router.post('/', function (req, res, next) {
     });
 });
 
+router.put('/', (req, res, next) => {
+    if (req.query.id) {
+        let id = req.query.id;
+        const update = { isChecked: true };
+        Contact.findOneAndUpdate({ _id: id }, update, (err, contact) => {
+            if (err) return res.status(500).send(err);
+            res.send({
+                message: "ok",
+                contact: contact
+            });
+        });
+    } else {
+        res.status(404).send({
+            message: "id no definido"
+        });
+    }
+
+});
+
 export default router;
