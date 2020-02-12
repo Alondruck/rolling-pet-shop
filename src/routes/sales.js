@@ -36,9 +36,9 @@ router.post('/', function (req, res, next) {
                         let preference = {
                             items: itemsMP,
                             back_urls: {
-                                success: "https://www.xvideos.com",
-                                failure: "http://www.pornhub.com",
-                                pending: "http://www.redtube.com"
+                                success: "https://localhost:3000",
+                                failure: "http://localhost:3000",
+                                pending: "http://localhost:3000"
                             }
                         };
                         mercadopago.preferences.create(preference)
