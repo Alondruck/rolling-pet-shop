@@ -39,6 +39,18 @@ router.get('/', function (req, res, next) {
     }
 });
 
+router.get('/:id', function (req, res, next) {
+    const productId = req.params.id;
+    Product.findOne({ _id: productId }, (err, product) => {
+        if (err) res.status(500).send(err);
+        if (product) {
+            res.send(product);
+        } else {
+            res.send({ message: "No se encontró el producto " + productId })
+        }
+    });
+});
+
 router.post('/', isAuth, isAdmin, function (req, res, next) {
     const newProduct = new Product({
         name: req.body.name,
