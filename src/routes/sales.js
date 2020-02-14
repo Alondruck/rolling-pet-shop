@@ -118,34 +118,45 @@ router.post('/', function (req, res, next) {
 })*/
 });
 
-router.put('/', (req, res, next) => {
-    const sale = req.body;
-    let update = { status: sale.status };
-    Sale.findOneAndUpdate({ _id: sale._id }, update, { new: true }, (err, saleUpdated) => {
-        if (err) return res.status(500).send(err);
-        if (sale.status == "approved") {
-            let ids = [];
-            saleUpdated.products.forEach((item) => {
-                ids.push(item.productId);
-            });
-            Product.find({ _id: ids }, (err, products) => {
-                if (err) res.status(500).send(err);
-                products.forEach((item, index) => {
-                    console.log("productoFind: ", item);
-                    console.log("Sale Updated: ", saleUpdated.products[index]);
-                    let updateStock = { stock: parseInt(item.stock, 10) - parseInt(saleUpdated.products[index].quantity, 10) }
-                    Product.findOneAndUpdate({ _id: item._id }, updateStock, { new: true }, (err) => {
-                        if (err) res.status(500).send(err);
+router.put('/:id', (req, res, next) => {
+    const mp_id = req.params.id;
+    mercadopago.payment.get(mp_id, {}, (err, response) => {
+        if (err) res.status(500).send(err);
+        console.log("status: " + response.response.status, "id: " + response.response.external_reference);
+        let update = { status: response.response.status };
+        let saleId = response.response.external_reference;
+        Sale.findOneAndUpdate({ _id: saleId }, update, { new: true }, (err, saleUpdated) => {
+            if (err) return res.status(500).send(err);
+            if (update.status == "approved") {
+                let ids = [];
+                saleUpdated.products.forEach((item) => {
+                    ids.push(item.productId);
+                });
+                Product.find({ _id: ids }, (err, products) => {
+                    if (err) res.status(500).send(err);
+                    products.forEach((item, index) => {
+                        console.log("productoFind: ", item);
+                        console.log("Sale Updated: ", saleUpdated.products[index]);
+                        let updateStock = { stock: parseInt(item.stock, 10) - parseInt(saleUpdated.products[index].quantity, 10) }
+                        Product.findOneAndUpdate({ _id: item._id }, updateStock, { new: true }, (err) => {
+                            if (err) res.status(500).send(err);
+                        });
+                    });
+                    res.send({
+                        message: update.status,
+                        response: saleUpdated
                     });
                 });
+            } else {
                 res.send({
-                    message: "ok"
+                    message: update.status,
+                    response: saleUpdated
                 });
-            });
-        } else {
-            res.send(saleUpdated);
-        }
+            }
+        });
+
     });
+
 
 });
 // Crea un objeto de preferencia
