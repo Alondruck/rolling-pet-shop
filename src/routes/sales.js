@@ -32,25 +32,26 @@ router.post('/', function (req, res, next) {
                         newSale.save((err, newSale) => {
                             if (err) return res.status(500).send(err);
                             //res.send(newSale);
-                        });
-                        let preference = {
-                            items: itemsMP,
-                            back_urls: {
-                                success: "https://localhost:3000",
-                                failure: "http://localhost:3000",
-                                pending: "http://localhost:3000"
-                            }
-                        };
-                        mercadopago.preferences.create(preference)
-                            .then(function (response) {
-                                // Este valor reemplazará el string "$$init_point$$" en tu HTML
-                                global.init_point = response.body.init_point;
-                                res.send({
-                                    url: global.init_point
+                            let preference = {
+                                items: itemsMP,
+                                back_urls: {
+                                    success: "https://localhost:3000",
+                                    failure: "http://localhost:3000",
+                                    pending: "http://localhost:3000"
+                                },
+                                external_reference: newSale._id
+                            };
+                            mercadopago.preferences.create(preference)
+                                .then(function (response) {
+                                    // Este valor reemplazará el string "$$init_point$$" en tu HTML
+                                    global.init_point = response.body.init_point;
+                                    res.send({
+                                        url: global.init_point
+                                    });
+                                }).catch(function (error) {
+                                    res.status(500).send(error);
                                 });
-                            }).catch(function (error) {
-                                res.status(500).send(error);
-                            });
+                        });
                     } else {
                         return res.status(500).send({
                             message: "No hay stock suficiente"
