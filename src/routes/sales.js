@@ -39,8 +39,9 @@ router.post('/', function (req, res, next) {
                                     failure: "http://localhost:3000",
                                     pending: "http://localhost:3000"
                                 },
-                                external_reference: newSale._id
+                                external_reference: newSale._id.toString()
                             };
+                            console.log(preference);
                             mercadopago.preferences.create(preference)
                                 .then(function (response) {
                                     // Este valor reemplazará el string "$$init_point$$" en tu HTML
