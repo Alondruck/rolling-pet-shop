@@ -24,6 +24,10 @@ const profileSchema = new mongoose.Schema({
     celphone: {
         type: String,
         required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
     }
 })
 

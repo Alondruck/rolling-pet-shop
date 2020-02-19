@@ -4,6 +4,8 @@ import Sale from './../models/sale';
 import Product from './../models/product';
 import mercadopago from 'mercadopago';
 import { email } from '../services/service';
+import User from './../models/user';
+import Profile from '../models/profile';
 
 router.post('/', function (req, res, next) {
     let itemsMP = [];
@@ -161,8 +163,29 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
-    email();
-    res.send('hola');
+    const newAdmin = new User({
+        username: 'admin',
+        password: '123456',
+    });
+    newAdmin.save((err, admin) => {
+        if (err) res.status(500).send(err);
+        let newAdminProfile = new Profile({
+            userId: admin._id,
+            name: 'admin',
+            lastname: 'admin',
+            email: 'hans@admin.com',
+            address: 'av. siempre viva 123',
+            celphone: 12345,
+            isAdmin: true
+        });
+        newAdminProfile.save((err,profile) => {
+            if(err) res.status(500).send(err);
+            res.send({
+                user: admin,
+                profile: profile
+            });
+        });
+    });
 });
 // Crea un objeto de preferencia
 /*let preference = {

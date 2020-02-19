@@ -15,7 +15,7 @@ router.get('/admin', (req, res) => { //isAuth, isAdmin,
   })
 });
 
-router.get('/admin/users', isAuth, isAdmin, (req, res) => {
+router.get('/admin/users', (req, res) => {
   User.find({}, (err, users) => {
     if (err) return res.status(500).send(err);
     res.send(users);
