@@ -24,7 +24,7 @@ router.post('/', function (req, res, next) {
     });
 });
 
-router.put('/', (req, res, next) => {
+router.put('/', isAuth, isAdmin, (req, res, next) => {
     if (req.query.id) {
         let id = req.query.id;
         const update = { isChecked: true };

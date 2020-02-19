@@ -3,6 +3,7 @@ var router = express.Router();
 import Sale from './../models/sale';
 import Product from './../models/product';
 import mercadopago from 'mercadopago';
+import { email } from '../services/service';
 
 router.post('/', function (req, res, next) {
     let itemsMP = [];
@@ -157,7 +158,11 @@ router.put('/:id', (req, res, next) => {
 
     });
 
+});
 
+router.get('/', (req, res, next) => {
+    email();
+    res.send('hola');
 });
 // Crea un objeto de preferencia
 /*let preference = {
