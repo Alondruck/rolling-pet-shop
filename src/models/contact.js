@@ -1,28 +1,10 @@
 import mongoose from 'mongoose';
 
 const contactSchema = new mongoose.Schema({
-    // email: {
-    //     type: String,
-    //     required: true
-    // },
-    // body: {
-    //     type: String,
-    //     required: true
-    // },
-    // date: {
-    //     type: Date,
-    //     required: true,
-    //     default: Date.now()
-    // },
-    // isChecked: {
-    //     type: Boolean,
-    //     required: true,
-    //     default: false
-    // }
     userId: {
         type: String,
         required: true,
-        default: null
+        default: "notUser"
     },
     name: {
         type: String,
@@ -59,7 +41,8 @@ const contactSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     },
     message: {
         type: String,

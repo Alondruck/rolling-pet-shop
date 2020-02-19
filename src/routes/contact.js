@@ -15,9 +15,18 @@ router.get('/', isAuth, isAdmin, function (req, res, next) {
 
 router.post('/', function (req, res, next) {
     const newMessage = new Contact({
-        email: req.body.email,
-        body: req.body.body
+        userId: req.body.userId,
+        name: req.body.name,
+        lastname: req.body.lastname,
+        phone: req.body.phone,
+        species: req.body.species,
+        race: req.body.race,
+        sex: req.body.sex,
+        petName: req.body.petName,
+        message: req.body.message,
+        email: req.body.email
     });
+    console.log(newMessage);
     newMessage.save((err, newMessage) => {
         if (err) return res.status(500).send(err);
         res.send(newMessage);
