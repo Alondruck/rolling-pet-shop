@@ -68,7 +68,7 @@ function email() {
         // Message object
         let message = {
             from: 'Sender Name <sender@example.com>',
-            to: 'Recipient <hans.huttmann1@gmail.com>',
+            to: 'hans.huttmann1@gmail.com',
             subject: 'Nodemailer is unicode friendly ✔',
             text: 'Hello to myself!',
             html: '<p><b>Hello</b> to myself!</p>'
