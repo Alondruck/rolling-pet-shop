@@ -36,7 +36,7 @@ router.post('/', function (req, res, next) {
                             let preference = {
                                 items: itemsMP,
                                 back_urls: {
-                                    success: "https://localhost:3000",
+                                    success: "http://localhost:3000",
                                     failure: "http://localhost:3000",
                                     pending: "http://localhost:3000"
                                 },
@@ -150,7 +150,7 @@ router.put('/:id', (req, res, next) => {
                 });
             } else {
                 res.send({
-                    message: update.status,
+                    message: "ok",
                     response: saleUpdated
                 });
             }
