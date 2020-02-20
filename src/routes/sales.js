@@ -4,119 +4,83 @@ import Sale from './../models/sale';
 import Product from './../models/product';
 import mercadopago from 'mercadopago';
 import { isAuth, isAdmin } from './../middlewares/auth';
+import transporter from './../middlewares/server';
+import Profile from './../models/profile';
 
 router.post('/', isAuth, function (req, res, next) {
+    console.log(req.userId);
     let itemsMP = [];
     let ids = [];
     req.body.products.forEach((item) => {
         ids.push(item.productId);
     });
-    Product.find({ _id: ids }, (err, products) => {
+    Profile.findOne({ userId: req.userId }, (err, profile) => {
         if (err) return res.status(500).send(err);
-        if (req.body.products.length !== products.length) return res.send({
-            message: "no se encontró el producto seleccionado"
-        });
-        let flg = false; // se activa cuando quantity supera el stock
-        req.body.products.forEach((item, index) => {
-            if (parseInt(products[index].stock, 10) >= parseInt(item.quantity, 10)) {
-                let productItem = {
-                    title: products[index].name,
-                    unit_price: products[index].price,
-                    quantity: item.quantity
-                };
-                itemsMP.push(productItem);
-                if ((index == req.body.products.length - 1)) {
-                    if (!flg) {
-                        const newSale = new Sale({
-                            products: req.body.products
-                        });
-                        newSale.save((err, newSale) => {
-                            if (err) return res.status(500).send(err);
-                            //res.send(newSale);
-                            let preference = {
-                                items: itemsMP,
-                                back_urls: {
-                                    success: "http://localhost:3000",
-                                    failure: "http://localhost:3000",
-                                    pending: "http://localhost:3000"
-                                },
-                                external_reference: newSale._id.toString()
-                            };
-                            console.log(preference);
-                            mercadopago.preferences.create(preference)
-                                .then(function (response) {
-                                    // Este valor reemplazará el string "$$init_point$$" en tu HTML
-                                    global.init_point = response.body.init_point;
-                                    res.send({
-                                        url: global.init_point
+        Product.find({ _id: ids }, (err, products) => {
+            if (err) return res.status(500).send(err);
+            if (req.body.products.length !== products.length) return res.send({
+                message: "no se encontró el producto seleccionado"
+            });
+            let flg = false; // se activa cuando quantity supera el stock
+            req.body.products.forEach((item, index) => {
+                if (parseInt(products[index].stock, 10) >= parseInt(item.quantity, 10)) {
+                    let productItem = {
+                        title: products[index].name,
+                        unit_price: products[index].price,
+                        quantity: item.quantity
+                    };
+                    itemsMP.push(productItem);
+                    if ((index == req.body.products.length - 1)) {
+                        if (!flg) {
+                            const newSale = new Sale({
+                                products: req.body.products,
+                                email: profile.email
+                            });
+                            newSale.save((err, newSale) => {
+                                if (err) return res.status(500).send(err);
+                                //res.send(newSale);
+
+                                let preference = {
+                                    items: itemsMP,
+                                    back_urls: {
+                                        success: "http://localhost:3000/compra/success",
+                                        failure: "http://localhost:3000/compra/failure",
+                                        pending: "http://localhost:3000/compra/failure"
+                                    },
+                                    external_reference: newSale._id.toString(),
+                                };
+                                console.log('preference: ', preference);
+                                mercadopago.preferences.create(preference)
+                                    .then(function (response) {
+                                        // Este valor reemplazará el string "$$init_point$$" en tu HTML
+                                        global.init_point = response.body.init_point;
+                                        res.send({
+                                            url: global.init_point
+                                        });
+                                    }).catch(function (error) {
+                                        res.status(500).send(error);
                                     });
-                                }).catch(function (error) {
-                                    res.status(500).send(error);
-                                });
-                        });
-                    } else {
+                            });
+                        } else {
+                            return res.status(500).send({
+                                message: "No hay stock suficiente"
+                            });
+                        }
+                    }
+                } else {
+                    flg = true;
+                    if (index == req.body.products.length - 1) {
                         return res.status(500).send({
                             message: "No hay stock suficiente"
                         });
                     }
                 }
-            } else {
-                flg = true;
-                if (index == req.body.products.length - 1) {
-                    return res.status(500).send({
-                        message: "No hay stock suficiente"
-                    });
-                }
-            }
-        });
+            });
 
-        //res.send(products);
-        /*products.forEach((item, index) => {
-            let productStock = parseInt(item.stock, 10);
-            let quantity = parseInt(item.quantity, 10);
-        });*/
+        });
     });
-    /*if (err) return res.status(500).send(err);
-    let productStock = parseInt(product.stock, 10);
-    let quantity = parseInt(item.quantity, 10);
-    if (productStock >= quantity) {
-        productItem = {
-            title: product.eventNames,
-            unit_price: product.price,
-            quantity: quantity
-        };
-        items.push(productItem);
-        let update = { stock: productStock - quantity }
-        Product.findOneAndUpdate({ _id: product._id }, update, { new: true }, (err, productUpdated) => {
-            if (err) return res.status(500).send(err);
-            if (index == req.body.products.length - 1) {
-                const newSale = new Sale({
-                    products: req.body.products
-                });
-                newSale.save((err, newSale) => {
-                    if (err) return res.status(500).send(err);
-                    //res.send(newSale);
-                });
-                // Crea un objeto de preferencia
-                let preference = {
-                    items: items
-                };
-                mercadopago.preferences.create(preference)
-                    .then(function (response) {
-                        // Este valor reemplazará el string "$$init_point$$" en tu HTML
-                        global.init_point = response.body.init_point;
-                        res.send(global.init_point);
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-            }
-        });
-    } else {
-        return res.status(404).send({
-            message: "No hay stock suficiente"
-        });
-    }
-})*/
+
+
 });
 
 router.put('/:id', (req, res, next) => {
@@ -154,22 +118,34 @@ router.put('/:id', (req, res, next) => {
                     response: saleUpdated
                 });
             }
+            let mailOptions = {
+                from: 'rolling-pet-shop@rc.com',
+                to: saleUpdated.email,
+                subject: 'COMPRA ROLLING PET SHOP',
+                text: 'Señor usuario de Rolling Pet Shop, queríamos informar que el estado de su compra realizada el ' + saleUpdated.date + ' es ' + saleUpdated.status + '. Gracias por confiar en nosotros.'
+            }
+            transporter.sendMail(mailOptions, function (err, data) {
+                if (err) { console.log(err) } else { console.log('success!') }
+            });
         });
 
     });
 
 });
 
-// Crea un objeto de preferencia
-/*let preference = {
-    items: [
-        {
-            title: 'Mi producto',
-            unit_price: 100,
-            quantity: 1,
-        }
-    ]
-};*/
+// router.get('/', (req, res, next) => {
+
+
+
+
+// });
+
+router.get('/', isAuth, isAdmin, (req, res, next) => {
+    Sale.find({}, (err, sales) => {
+        if (err) return res.status(500).send(err);
+        res.send(sales);
+    });
+});
 
 /*{
     "products": [

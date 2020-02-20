@@ -13,9 +13,18 @@ const productSaleSchema = new mongoose.Schema({
 
 const saleSchema = new mongoose.Schema({
     products: [productSaleSchema],
+    email: {
+        type: String,
+        required: true
+    },
     status: {
         type: String,
         default: "pending",
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now(),
         required: true
     }
 });

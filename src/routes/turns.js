@@ -36,7 +36,7 @@ router.get('/', isAuth, isAdmin, function (req, res, next) {
   }
 });
 
-router.post('/', isAuth, (req, res) => {
+router.post('/', (req, res) => {
   const newDate = new Appointment({
     petName: req.body.petName,
     ownerName: req.body.ownerName,

@@ -16,6 +16,7 @@
     "bigint-hash": "^0.2.2",
     "cookie-parser": "^1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
     "emailjs-com": "^2.4.1",
     "express": "~4.16.0",
     "jwt-simple": "^0.5.6",
