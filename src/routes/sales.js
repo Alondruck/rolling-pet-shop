@@ -1,8 +1,9 @@
-import express, { Router } from 'express';
+import express from 'express';
 var router = express.Router();
 import Sale from './../models/sale';
 import Product from './../models/product';
 import mercadopago from 'mercadopago';
+import { isAuth, isAdmin } from './../middlewares/auth';
 
 router.post('/', isAuth, function (req, res, next) {
     let itemsMP = [];

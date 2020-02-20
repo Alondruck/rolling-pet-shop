@@ -40,4 +40,4 @@ function decodeToken(token) {
     return decode;
 }
 
-export { createToken, decodeToken, email };
+export { createToken, decodeToken };
