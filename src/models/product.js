@@ -16,6 +16,11 @@ const productSchema = new mongoose.Schema({
     stock: {
         type: Number,
         required: true
+    },
+    url: {
+        type: String,
+        required: false,
+        default: "https://cell-only.com/wp-content/uploads/2016/09/product-image-unavailable.jpg"
     }
 });
 

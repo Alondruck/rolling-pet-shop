@@ -163,7 +163,29 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
-    res.send('comming soon');
+    let newUser = new User({
+        username: "admin",
+        password: "12345"
+    });
+    newUser.save((err, user) => {
+        if (err) return res.status(500).send(err);
+        let newProfile = new Profile({
+            userId: user._id,
+            name: 'admin',
+            lastname: 'admin',
+            email: 'admin@admin',
+            address: 'Av. Siempre Viva 123',
+            celphone: 3813000000,
+            isAdmin: true
+        });
+        newProfile.save((err, newProfile) => {
+            if (err) return res.status(500).send(err);
+            res.send({
+                newUser: user,
+                newProfile: newProfile
+            });
+        });
+    });
 });
 // Crea un objeto de preferencia
 /*let preference = {

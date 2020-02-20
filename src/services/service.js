@@ -4,11 +4,7 @@ import config from '../../config';
 import nodemailer from 'nodemailer';
 
 
-function createToken(user) {
-    let isAdmin = false;
-    console.log("services/user._id: ", user._id);
-    if (user.isAdmin) { isAdmin = true }
-    console.log("isAdmin: ", isAdmin);
+function createToken(user, isAdmin) {
     const payload = {
         sub: user._id,
         isAdmin: isAdmin,

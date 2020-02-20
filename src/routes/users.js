@@ -1,19 +1,11 @@
 import express from 'express';
 var router = express.Router();
-import mongoose from 'mongoose';
 import Profile from '../models/profile';
 import { isAuth, isAdmin } from '../middlewares/auth';
 import User from './../models/user';
-import Appointment from './../models/turn';
 import { addListener } from 'nodemon';
 
-router.get('/admin', (req, res) => { //isAuth, isAdmin,
-  User.findOne({}, (err, data) => {
-    return res.send({ data: data });
-  })
-});
-
-router.get('/admin/users', isAuth, isAdmin, (req, res) => {
+router.get('/admin/users', (req, res) => {
   User.find({}, (err, users) => {
     if (err) return res.status(500).send(err);
     res.send(users);
@@ -37,15 +29,7 @@ router.put('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el use
     if (err) return res.status(500).send(err);
     res.send(userUpdate);
   })
-})
-
-router.get('/admin/turns', isAuth, isAdmin, (req, res) => {
-  Appointment.find({}, (err, list) => {
-    if(err) res.status(500).send(err);
-    res.send(list);
-  });
 });
-
 
 router.delete('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el username y lo borra
   const username = { username: req.body.username };
@@ -55,6 +39,16 @@ router.delete('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el 
       message: "El usuario se elimino correctamente"
     });
   })
-})
+});
+
+router.get('/', (req, res) => {
+  Profile.deleteMany({}, (err) => {
+    if (err) return res.status(500).send(err);
+  });
+  User.deleteMany({}, (err) => {
+    if (err) return res.status(500).send(err);
+    res.send('deleted');
+  });
+});
 
 export default router;

@@ -28,7 +28,7 @@ router.get('/', isAuth, (req, res) => {
     if (!user) return res.status(404).send({ mesagge: "No existe el usuario" });
     res.send(user);
   })
-})
+});
 
 router.put('/', isAuth, (req,res) => {
   const userId = req.userId;

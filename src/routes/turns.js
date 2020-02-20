@@ -1,10 +1,10 @@
 import express from 'express';
 var router = express.Router();
-import Appointment from './../models/turn';
+import Appointment from './../models/appointment';
 import { isAuth, isAdmin } from '../middlewares/auth';
 import moment from 'moment';
 
-router.get('/', isAuth, function (req, res, next) {
+router.get('/', isAuth, isAdmin, function (req, res, next) {
   let response = {};
   if (req.query.date) {
     Appointment.find({
@@ -23,7 +23,7 @@ router.get('/', isAuth, function (req, res, next) {
   } else {
     Appointment.find({
       date: {
-        $gte: moment().subtract(7, 'days')
+        $gte: moment().subtract(15, 'days')
       }
     }, null, (err, list) => {
       if (err) res.status(500).send(err);

@@ -1,16 +1,20 @@
 import mongoose from 'mongoose';
 
 const appointmentSchema = new mongoose.Schema({
-    userId: {
+    petName: {
         type: String,
         required: true
     },
-    type: {
+    ownerName: {
         type: String,
         required: true
     },
     date:{
-        type: Number,
+        type: Date,
+        required: true
+    },
+    description:{
+        type: String,
         required: true
     }
 })
