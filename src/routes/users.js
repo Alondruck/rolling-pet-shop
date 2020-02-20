@@ -7,22 +7,20 @@ import User from './../models/user';
 import Appointment from './../models/turn';
 import { addListener } from 'nodemon';
 
-// mongoose.connect(config.mongo_uri);
-
 router.get('/admin', (req, res) => { //isAuth, isAdmin,
   User.findOne({}, (err, data) => {
     return res.send({ data: data });
   })
 });
 
-router.get('/admin/users', (req, res) => {
+router.get('/admin/users', isAuth, isAdmin, (req, res) => {
   User.find({}, (err, users) => {
     if (err) return res.status(500).send(err);
     res.send(users);
   });
 });
 
-router.get('/admin/profiles', isAuth, isAdmin, (req, res) => {
+router.get('/admin/profiles', (req, res) => {
   Profile.find({}, (err, profiles) => {
     if (err) return res.status(500).send(err);
     res.send(profiles);

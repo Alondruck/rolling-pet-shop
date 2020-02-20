@@ -4,8 +4,6 @@ import mongoose from 'mongoose';
 import Contact from './../models/contact';
 import { isAuth, isAdmin } from '../middlewares/auth';
 
-mongoose.connect('mongodb://localhost:27017/petShop', { useNewUrlParser: true });
-
 router.get('/', isAuth, isAdmin, function (req, res, next) {
     Contact.find((err, messages) => {
         if (err) return res.status(500).send(err);

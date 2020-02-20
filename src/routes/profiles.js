@@ -4,8 +4,6 @@ import mongoose from 'mongoose';
 import Profile from '../models/profile';
 import { isAuth, isAdmin } from '../middlewares/auth';
 
-mongoose.connect('mongodb://localhost:27017/petShop');
-
 router.post('/signup', isAuth, (req, res) => {
   const profile = new Profile({
     userId: req.userId,
