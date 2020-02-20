@@ -5,14 +5,14 @@ import { isAuth, isAdmin } from '../middlewares/auth';
 import User from './../models/user';
 import { addListener } from 'nodemon';
 
-router.get('/admin/users', (req, res) => {
+router.get('/admin/users', isAuth, isAdmin, (req, res) => {
   User.find({}, (err, users) => {
     if (err) return res.status(500).send(err);
     res.send(users);
   });
 });
 
-router.get('/admin/profiles', (req, res) => {
+router.get('/admin/profiles', isAuth, isAdmin, (req, res) => {
   Profile.find({}, (err, profiles) => {
     if (err) return res.status(500).send(err);
     res.send(profiles);
@@ -39,16 +39,6 @@ router.delete('/admin', isAuth, isAdmin, (req, res) => { //Recibe en el body el 
       message: "El usuario se elimino correctamente"
     });
   })
-});
-
-router.get('/', (req, res) => {
-  Profile.deleteMany({}, (err) => {
-    if (err) return res.status(500).send(err);
-  });
-  User.deleteMany({}, (err) => {
-    if (err) return res.status(500).send(err);
-    res.send('deleted');
-  });
 });
 
 export default router;

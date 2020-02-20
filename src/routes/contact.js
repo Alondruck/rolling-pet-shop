@@ -1,6 +1,5 @@
 import express from 'express';
 var router = express.Router();
-import mongoose from 'mongoose';
 import Contact from './../models/contact';
 import { isAuth, isAdmin } from '../middlewares/auth';
 

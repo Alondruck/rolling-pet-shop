@@ -3,11 +3,8 @@ var router = express.Router();
 import Sale from './../models/sale';
 import Product from './../models/product';
 import mercadopago from 'mercadopago';
-import { email } from '../services/service';
-import User from './../models/user';
-import Profile from '../models/profile';
 
-router.post('/', function (req, res, next) {
+router.post('/', isAuth, function (req, res, next) {
     let itemsMP = [];
     let ids = [];
     req.body.products.forEach((item) => {
@@ -162,31 +159,6 @@ router.put('/:id', (req, res, next) => {
 
 });
 
-router.get('/', (req, res, next) => {
-    let newUser = new User({
-        username: "admin",
-        password: "12345"
-    });
-    newUser.save((err, user) => {
-        if (err) return res.status(500).send(err);
-        let newProfile = new Profile({
-            userId: user._id,
-            name: 'admin',
-            lastname: 'admin',
-            email: 'admin@admin',
-            address: 'Av. Siempre Viva 123',
-            celphone: 3813000000,
-            isAdmin: true
-        });
-        newProfile.save((err, newProfile) => {
-            if (err) return res.status(500).send(err);
-            res.send({
-                newUser: user,
-                newProfile: newProfile
-            });
-        });
-    });
-});
 // Crea un objeto de preferencia
 /*let preference = {
     items: [
