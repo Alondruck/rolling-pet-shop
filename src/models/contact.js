@@ -47,6 +47,11 @@ const contactSchema = new mongoose.Schema({
     message: {
         type: String,
         required: true
+    },
+    isChecked: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 
