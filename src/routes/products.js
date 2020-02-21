@@ -55,7 +55,8 @@ router.post('/', isAuth, isAdmin, function (req, res, next) {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
-        stock: req.body.stock
+        stock: req.body.stock,
+        url: req.body.url
     });
     newProduct.save((err, data) => {
         if (err) return res.status(500).send(err);

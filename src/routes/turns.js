@@ -4,7 +4,7 @@ import Appointment from './../models/appointment';
 import { isAuth, isAdmin } from '../middlewares/auth';
 import moment from 'moment';
 
-router.get('/', isAuth, isAdmin, function (req, res, next) {
+router.get('/', isAuth, function (req, res, next) {
   let response = {};
   if (req.query.date) {
     Appointment.find({
