@@ -49,10 +49,11 @@ router.put('/', isAuth, isAdmin, (req, res, next) => {
 
 });
 
-router.delete('/', isAuth, isAdmin, (req, res, next) => {
-    Contact.deleteMany({}, (err) => {
+router.delete('/:id', isAuth, isAdmin, (req, res, next) => {
+    const contactId = req.params.id;
+    Contact.deleteOne({ _id: contactId }, (err, contactDeleted) => {
         if (err) return res.status(500).send(err);
-        res.send('messages deleted!');
+        res.send(contactDeleted);
     });
 });
 
