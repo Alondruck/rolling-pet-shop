@@ -8,7 +8,6 @@ import transporter from './../middlewares/server';
 import Profile from './../models/profile';
 
 router.post('/', isAuth, function (req, res, next) {
-    console.log(req.userId);
     let itemsMP = [];
     let ids = [];
     req.body.products.forEach((item) => {
@@ -24,13 +23,18 @@ router.post('/', isAuth, function (req, res, next) {
             let flg = false; // se activa cuando quantity supera el stock
             req.body.products.forEach((item, index) => {
                 if (parseInt(products[index].stock, 10) >= parseInt(item.quantity, 10)) {
+
+                    //arreglo de productos para MP
                     let productItem = {
                         title: products[index].name,
                         unit_price: products[index].price,
                         quantity: item.quantity
                     };
                     itemsMP.push(productItem);
+                    
+                    //Una vez que llega al último
                     if ((index == req.body.products.length - 1)) {
+                        //Algún producto estaba sin stock?
                         if (!flg) {
                             const newSale = new Sale({
                                 products: req.body.products,
@@ -38,8 +42,8 @@ router.post('/', isAuth, function (req, res, next) {
                             });
                             newSale.save((err, newSale) => {
                                 if (err) return res.status(500).send(err);
-                                //res.send(newSale);
-
+                                
+                                //Preferencia de MP
                                 let preference = {
                                     items: itemsMP,
                                     back_urls: {
@@ -47,9 +51,9 @@ router.post('/', isAuth, function (req, res, next) {
                                         failure: "http://localhost:3000/compra/failure",
                                         pending: "http://localhost:3000/compra/failure"
                                     },
-                                    external_reference: newSale._id.toString(),
+                                    external_reference: newSale._id.toString()
                                 };
-                                console.log('preference: ', preference);
+                                
                                 mercadopago.preferences.create(preference)
                                     .then(function (response) {
                                         // Este valor reemplazará el string "$$init_point$$" en tu HTML
@@ -85,9 +89,9 @@ router.post('/', isAuth, function (req, res, next) {
 
 router.put('/:id', (req, res, next) => {
     const mp_id = req.params.id;
+    //consulta en la base de datos de MP
     mercadopago.payment.get(mp_id, {}, (err, response) => {
         if (err) res.status(500).send(err);
-        console.log("status: " + response.response.status, "id: " + response.response.external_reference);
         let update = { status: response.response.status };
         let saleId = response.response.external_reference;
         Sale.findOneAndUpdate({ _id: saleId }, update, { new: true }, (err, saleUpdated) => {
@@ -100,8 +104,6 @@ router.put('/:id', (req, res, next) => {
                 Product.find({ _id: ids }, (err, products) => {
                     if (err) res.status(500).send(err);
                     products.forEach((item, index) => {
-                        console.log("productoFind: ", item);
-                        console.log("Sale Updated: ", saleUpdated.products[index]);
                         let updateStock = { stock: parseInt(item.stock, 10) - parseInt(saleUpdated.products[index].quantity, 10) }
                         Product.findOneAndUpdate({ _id: item._id }, updateStock, { new: true }, (err) => {
                             if (err) res.status(500).send(err);
@@ -133,32 +135,12 @@ router.put('/:id', (req, res, next) => {
 
 });
 
-// router.get('/', (req, res, next) => {
-
-
-
-
-// });
-
 router.get('/', isAuth, isAdmin, (req, res, next) => {
     Sale.find({}, (err, sales) => {
         if (err) return res.status(500).send(err);
         res.send(sales);
     });
 });
-
-/*{
-    "products": [
-        {
-            "productId": "5e25f4248253b346ecdb6ee7",
-            "quantity": 4
-        },
-        {
-            "productId": "5e260cd32c1e8246c4755027",
-            "quantity": 2
-        }
-    ]
-}*/
 
 
 export default router;

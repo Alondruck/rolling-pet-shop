@@ -24,7 +24,9 @@ function isAuth(req, res, next) {
 
 function isAdmin(req, res, next) {
     if (req.isAdmin) next();
-    else return res.send("no es admin");
+    else return res.send({
+        message: 'Sólo permisos de administrador!'
+    });
 }
 
 export { isAuth, isAdmin };
