@@ -10,7 +10,8 @@ router.post('/signup', isAuth, (req, res) => {
     lastname: req.body.lastname,
     email: req.body.email,
     address: req.body.address,
-    celphone: req.body.celphone
+    celphone: req.body.celphone,
+    isAdmin: false
   });
   profile.save((err, newProfile) => {
     if (err) return res.status(500).send(err);
@@ -46,8 +47,8 @@ router.put('/', isAuth, (req,res) => {
 })
 
 router.delete('/', isAuth, isAdmin, (req,res) => {
-  const username = { username: req.body.username };
-  User.deleteOne(username, (err) => {
+  const userId = { userId: req.body.userId };
+  Profile.deleteOne(userId, (err) => {
     if (err) return res.status(500).send(err);
     else return res.send({
       message: "El usuario se elimino correctamente"

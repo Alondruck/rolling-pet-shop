@@ -7,11 +7,11 @@ const profileSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required: true
+        required: false
     },
     lastname:{
         type: String,
-        required: true
+        required: false
     },
     email: {
         type: String,
@@ -19,11 +19,11 @@ const profileSchema = new mongoose.Schema({
     },
     address:{
         type: String,
-        required: true
+        required: false
     },
     celphone: {
         type: String,
-        required: true
+        required: false
     },
     isAdmin: {
         type: Boolean,
