@@ -49,4 +49,11 @@ router.put('/', isAuth, isAdmin, (req, res, next) => {
 
 });
 
+router.delete('/', isAuth, isAdmin, (req, res, next) => {
+    Contact.deleteMany({}, (err) => {
+        if (err) return res.status(500).send(err);
+        res.send('messages deleted!');
+    });
+});
+
 export default router;
