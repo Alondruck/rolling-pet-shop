@@ -2,6 +2,14 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import mongoose from 'mongoose'
+
+// conectar mongo
+mongoose.connect('mongodb://localhost/petShop', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+})
 
 import indexRouter from './routes/index';
 import productsRouter from './routes/products';
@@ -14,9 +22,14 @@ import { signUp, signIn } from './controllers/controllers';
 import mongoose from 'mongoose';
 import config from './../config';
 
+<<<<<<< HEAD
+import router from './routes/turn'
+
+=======
 mongoose.connect(config.mongo_uri);
 
 import mercadopago from 'mercadopago';
+>>>>>>> fc6f733d931d088973207d15d683a82fc479cf0d
 
 const app = express();
 
@@ -50,6 +63,7 @@ app.use('/turns', turnsRouter);
 app.post('/signup', signUp);
 app.post('/signin', signIn);
 
+app.use('/', router)
 
 
 export default app;
